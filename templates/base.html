@@ -23,13 +23,7 @@
         <p>{{ message }}</p>
         {% endfor %}
 
-        {% if current_user.is_authenticated %}
-        <p>{{ current_user.name }} さんこんにちは</p>
-        {% else %}
-        <p>ログインしていません</p>
-        {% endif %}
-
-        <h1>Hello world!</h1>
+        {% block content %}{% endblock %}
     </div>
 </body>
 
