@@ -82,9 +82,15 @@ def unregister():
 @app.route('/', methods=["GET","POST"])
 def index():
     if request.method == "POST":
-        #メッセージテーブルにクリエイト(追加)
+        # メッセージテーブルにクリエイト(追加)
         Message.create(user=current_user, content=request.form["content"])
-    return render_template('index.html')
+    messages =(
+        Message.select()
+        .where(Message.reply_to.is_null(True))
+        #descは降順の意味
+        .order_by(Message.pub_date.desc(), Message.id.desc())
+    )
+    return render_template("index.html", messages=messages)
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8000, debug=True)
