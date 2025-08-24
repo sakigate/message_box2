@@ -92,5 +92,16 @@ def index():
     )
     return render_template("index.html", messages=messages)
 
+
+# メッセージ削除
+@app.route("/messages/<message_id>/delete/", methods=["POST"])
+@login_required
+def delete(message_id):
+    if Message.select().where((Message.id == message_id) & (Message.user == current_user)).first():
+        Message.delete_by_id(message_id)
+    else:
+        flash("無効な操作です")
+    return redirect(url_for("index"))
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8000, debug=True)

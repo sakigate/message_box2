@@ -19,6 +19,11 @@
                 <img src="http://www.gravatar.com/avatar/{{ message.user.email }}?d=identicon&s=80" alt="" +
                     class="avatar">
                 {{ message.user.name }} {{ message.pub_date }}
+                {% if message.user == current_user %}
+                    <form action="{{ url_for('delete', message_id=message.id) }}" method="post" style="display:inline;">
+                        <input type="submit" value="削除" onclick="if(!confirm('このメッセージを削除しますか？')) return false">
+                    </form>
+                {% endif %}
                 <div class="message-content">
                     {{ message.content }}
                 </div>
