@@ -1,9 +1,18 @@
 from flask import Flask, redirect, render_template, request, flash
-from werkzeug.security import generate_password_hash
+from flask_login import LoginManager, login_manager,login_user
+from werkzeug.security import generate_password_hash, check_password_hash
 from config import User
 
 app = Flask(__name__)
 app.secret_key = "secret"
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# Flask-Loginがユーザー情報を取得するためのメソッド
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get_by_id(user_id)
+
 
 @app.route('/register',methods=["GET", "POST"])
 def register():
@@ -29,6 +38,25 @@ def register():
         )
     return render_template('register.html')
 
+@app.route('/login', methods=["GET", "POST"])
+def func_name():
+    if request.method == "POST":
+        # 未入力の時
+        if not request.form["password"] or not request.form["email"]:
+            flash("未入力の項目があります。")
+            return redirect(request.url)
+
+        #ログイン処理ここに書く
+        user = User.select().where(User.email == request.form["email"]).first()
+        if user is not None and check_password_hash(user.password, request.form["password"]):
+            login_user(user)
+            flash(f"ようこそ！ {user.name} さん")
+            return redirect("/")
+
+        #ログインできなかった時
+        flash("ログインできませんでした")
+
+    return render_template('login.html')
 
 @app.route('/')
 def index():
