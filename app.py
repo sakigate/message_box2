@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, flash
+from flask import Flask, redirect, render_template, request, flash, url_for
 from flask_login import LoginManager, current_user, login_manager,login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import User
@@ -13,6 +13,10 @@ login_manager.init_app(app)
 def load_user(user_id):
     return User.get_by_id(user_id)
 
+# ログインしていないとアクセスできないページにアクセスがあった場合の処理
+@login_manager.unauthorized_handler
+def unauthorized_handler():
+    return redirect("/login")
 
 @app.route('/register',methods=["GET", "POST"])
 def register():
@@ -51,7 +55,7 @@ def login():
         if user is not None and check_password_hash(user.password, request.form["password"]):
             login_user(user)
             flash(f"ようこそ！ {user.name} さん")
-            return redirect("/")
+            return redirect(url_for("index"))
 
         # ログインできなかった時
         flash("ログインできませんでした")
@@ -64,7 +68,7 @@ def login():
 def logout():
     logout_user()
     flash("ログアウトしました")
-    return redirect("/")
+    return redirect(url_for("index"))
 
 # ユーザー削除
 @app.route('/unregister')
@@ -72,7 +76,7 @@ def logout():
 def unregister():
     current_user.delete_instance()
     logout_user()
-    return redirect("/")
+    return redirect(url_for("index"))
 
 
 @app.route('/')
