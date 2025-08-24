@@ -1,5 +1,5 @@
 from flask import Flask, redirect, render_template, request, flash
-from flask_login import LoginManager, login_manager,login_user
+from flask_login import LoginManager, login_manager,login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import User
 
@@ -57,6 +57,13 @@ def func_name():
         flash("ログインできませんでした")
 
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    #ログアウト処理
+    logout_user()
+    flash("ログアウトしました")
+    return redirect("/")
 
 @app.route('/')
 def index():

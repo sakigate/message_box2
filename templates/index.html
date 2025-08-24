@@ -10,6 +10,12 @@
         <p>{{ message }}</p>
     {% endfor %}
 
-    <p>{{current_user.name}}</p>
+    {% if current_user.is_authenticated %}
+        <p>{{ current_user.name }} さんこんにちは</p>
+    {% else %}
+        <p>ログインしていません</p>
+    {% endif %}
+
+    <h1>Hello world!</h1>
 </body>
 </html>
