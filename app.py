@@ -103,5 +103,10 @@ def delete(message_id):
         flash("無効な操作です")
     return redirect(url_for("index"))
 
+# 返信表示
+@app.route("/messages/<message_id>/")
+def show(message_id):
+    return render_template("show.html")
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8000, debug=True)

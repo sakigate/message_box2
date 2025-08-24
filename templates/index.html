@@ -25,7 +25,9 @@
                     </form>
                 {% endif %}
                 <div class="message-content">
-                    {{ message.content }}
+                    <a href="{{ url_for('show', message_id=message.id) }}">
+                        {{ message.content }}
+                    </a>
                 </div>
             </li>
         </div>
